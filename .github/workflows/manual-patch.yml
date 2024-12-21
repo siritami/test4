@@ -164,7 +164,7 @@ jobs:
       - name: Cache
         uses: actions/download-artifact@v4
         with:
-          name: Release
+          name: Cache
           path: ./release
       - name: Releasing APK files
         uses: ./.github/actions/release
