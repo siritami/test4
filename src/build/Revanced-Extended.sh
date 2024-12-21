@@ -5,8 +5,6 @@ source src/build/utils.sh
 # Download requirements
 dl_gh "revanced-patches revanced-cli" "inotia00" "latest"
 
-
-revanced_dl
 #Disabled because lastest RVE patch youtube not have splits apk on APKMirror
 # Patch YouTube:
 #get_patches_key "youtube-revanced-extended"
