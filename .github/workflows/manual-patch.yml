@@ -129,6 +129,9 @@ jobs:
     name: Patch Revanced Extended Stable
     if: ${{ github.event.inputs.org == 'Revanced Extended' || inputs.org == 'Revanced Extended' }}
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.04
+      options: --user root
     strategy:
       matrix:
         run: [1, 2, 3]
@@ -137,6 +140,10 @@ jobs:
         uses: actions/checkout@v4.2.2
       - name: Preparing to patch
         uses: ./.github/actions/preparing
+      - name: Install lib
+        run: |
+          apt-get update
+          apt-get install -y curl jq wget
       - name: Check github connection
         id: check-gh-rve
         run: bash src/etc/connection.sh
@@ -144,10 +151,6 @@ jobs:
         id: patch-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
         run: bash src/build/Revanced-Extended.sh ${{ matrix.run }}
-      - name: Releasing APK files
-        id: release-rve
-        if: steps.check-gh-rve.outputs.internet_error == '0'
-        uses: ./.github/actions/release
   patch_rve_beta:
     name: Patch Revanced Extended Beta
     if: ${{ github.event.inputs.org == 'Revanced Extended Beta' || inputs.org == 'Revanced Extended Beta' }}
