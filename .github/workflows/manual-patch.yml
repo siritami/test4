@@ -137,7 +137,7 @@ jobs:
         run: [1, 2, 3]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v2
       - name: Preparing to patch
         uses: ./.github/actions/preparing
       - name: Install lib
