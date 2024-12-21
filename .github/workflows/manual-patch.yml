@@ -148,6 +148,26 @@ jobs:
         id: patch-rve
         if: steps.check-gh-rve.outputs.internet_error == '0'
         run: bash src/build/Revanced-Extended.sh
+      - name: Cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cache
+          path: |
+            ./release/*.apk
+  release_rve:
+    name: Release Revanced Extended Stable
+    needs: patch_rve
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache
+        uses: actions/download-artifact@v4
+        with:
+          name: Release
+          path: ./release
+      - name: Releasing APK files
+        uses: ./.github/actions/release
   patch_rve_beta:
     name: Patch Revanced Extended Beta
     if: ${{ github.event.inputs.org == 'Revanced Extended Beta' || inputs.org == 'Revanced Extended Beta' }}
