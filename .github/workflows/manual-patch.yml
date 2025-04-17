@@ -312,7 +312,7 @@ jobs:
         id: release-rve67
         if: steps.check-gh-rve67.outputs.internet_error == '0'
         uses: ./.github/actions/release
-  patch_$potjfy:
+  patch_potjfy:
     name: Patch $potjfy
     if: ${{ github.event.inputs.org == '$potjfy' || inputs.org == '$potjfy' }}
     runs-on: ubuntu-latest
@@ -322,15 +322,15 @@ jobs:
       - name: Preparing to patch
         uses: ./.github/actions/preparing
       - name: Check github connection
-        id: check-gh-$potjfy
+        id: check-gh-potjfy
         run: bash src/etc/connection.sh
       - name: Patch apk
-        id: patch-$potjfy
-        if: steps.check-gh-$potjfy.outputs.internet_error == '0'
-        run: bash src/build/$potjfy.sh
+        id: patch-potjfy
+        if: steps.check-gh-potjfy.outputs.internet_error == '0'
+        run: bash src/build/potjfy.sh
       - name: Releasing APK files
-        id: release-$potjfy
-        if: steps.check-gh-$potjfy.outputs.internet_error == '0'
+        id: release-potjfy
+        if: steps.check-gh-potjfy.outputs.internet_error == '0'
         uses: ./.github/actions/release
   patch_BiliRoamingM:
     name: Patch BiliRoamingM
