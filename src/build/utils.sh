@@ -277,7 +277,6 @@ get_apkpure() {
 		url="$(req "$url" - | grep -oP '<a[^>]+id="download_link"[^>]+href="\Khttps://[^"]+')"
 		echo "Here is: $url"
 		req "$url" "$base_apk"
-		echo "Here is: $url"
 	fi
 }
 
