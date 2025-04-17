@@ -144,6 +144,19 @@ _req() {
 req() {
     _req "$1" "$2"
 }
+find_version() {
+	if [ -z "$version" ] && [ "$lock_version" != "1" ]; then
+		if [[ $(ls revanced-cli-*.jar) =~ revanced-cli-([0-9]+) ]]; then
+			num=${BASH_REMATCH[1]}
+			if [ $num -ge 5 ]; then
+				version=$(java -jar *cli*.jar list-patches --with-packages --with-versions *.rvp | awk -v pkg="$1" 'BEGIN { found = 0 } /^Index:/ { found = 0 } /Package name: / { if ($3 == pkg) { found = 1 } } /Compatible versions:/ { if (found) { getline; latest_version = $1; while (getline && $1 ~ /^[0-9]+\./) { latest_version = $1 } print latest_version; exit } }')
+			else
+				version=$(jq -r '[.. | objects | select(.name == "'$1'" and .versions != null) | .versions[]] | reverse | .[0] // ""' *.json | uniq)
+			fi
+		fi
+	fi
+	export version="$version"
+}
 dl_apk() {
 	local url=$1 regexp=$2 output=$3
 	if [[ -z "$4" ]] || [[ $4 == "Bundle" ]] || [[ $4 == "Bundle_extract" ]]; then
@@ -174,17 +187,7 @@ get_apk() {
 			*) url_regexp='$5'"[^@]*$7"''"[^@]*$6"'</div>[^@]*@\([^"]*\)' ;;
 		esac 
 	fi
-	if [ -z "$version" ] && [ "$lock_version" != "1" ]; then
-		if [[ $(ls revanced-cli-*.jar) =~ revanced-cli-([0-9]+) ]]; then
-			num=${BASH_REMATCH[1]}
-			if [ $num -ge 5 ]; then
-				version=$(java -jar *cli*.jar list-patches --with-packages --with-versions *.rvp | awk -v pkg="$1" 'BEGIN { found = 0 } /^Index:/ { found = 0 } /Package name: / { if ($3 == pkg) { found = 1 } } /Compatible versions:/ { if (found) { getline; latest_version = $1; while (getline && $1 ~ /^[0-9]+\./) { latest_version = $1 } print latest_version; exit } }')
-			else
-				version=$(jq -r '[.. | objects | select(.name == "'$1'" and .versions != null) | .versions[]] | reverse | .[0] // ""' *.json | uniq)
-			fi
-		fi
-	fi
-	export version="$version"
+	find_version
     if [[ -n "$version" ]]; then
         version=$(echo "$version" | tr -d ' ' | sed 's/\./-/g')
         green_log "[+] Downloading $3 version: $version $5 $6 $7"
@@ -252,6 +255,9 @@ get_apk() {
 	elif [[ $5 == "Bundle_extract" ]]; then
 		unzip "./download/$base_apk" -d "./download/$(basename "$base_apk" .apkm)" > /dev/null 2>&1
 	fi
+}
+get_apkpure() {
+	find_version
 }
 
 #################################################
