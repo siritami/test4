@@ -54,7 +54,7 @@ Click "I understand my workflows, go ahead and enable them"
 Follow these steps to run the workflow to patch Spotjfy
 ![](../docs/image/FAQ/patching-app-4.png)
 
-After patch done back to home [your repository](../readme.md#spotjfy)
+After patch done back to home [your repository](../README.md#spotjfy)
 
 ---
 
