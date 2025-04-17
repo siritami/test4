@@ -232,7 +232,7 @@ Old patches, because latest patch not support split apks
 
 ### [Revanced](https://github.com/revanced/revanced-patches)
 
-#### ⚠️ Please read [WIKI](../main/docs/Frequently%20Asked%20Questions.md) before click download
+#### ⚠️ Please read [WIKI](../main/docs/Frequently%20Asked%20Questions.md#q-what-is-spotjfy-and-how-can-i-download-it) before click download
 
 [Arm64-v8a](../../releases/download/all/spotjfy-arm64-v8a-revanced.apk)
 
