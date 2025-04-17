@@ -234,8 +234,6 @@ Old patches, because latest patch not support split apks
 
 ## ⚠️ Please read [WIKI](../main/docs/Frequently%20Asked%20Questions.md) before click download
 
-[All Architectures](../../releases/download/all/spotjfy-revanced.apk)
-
 [Arm64-v8a](../../releases/download/all/spotjfy-arm64-v8a-revanced.apk)
 
 ---
