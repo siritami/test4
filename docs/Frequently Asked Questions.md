@@ -41,7 +41,7 @@ And then go to Readme click download your patched apps!
 
 ### Q: What is Spotjfy? And how can I download it?
 
-"Spotjfy" not miss spell, this mean [this app](https://www.google.com/search?q=Spotjfy)
+"Spotjfy" not misspell, this mean [this app](https://www.google.com/search?q=Spotjfy)
 
 This app high DMCA chance takdown so you should patch by yourself
 
@@ -54,7 +54,7 @@ Click "I understand my workflows, go ahead and enable them"
 Follow these steps to run the workflow to patch Spotjfy
 ![](../docs/image/FAQ/patching-app-4.png)
 
-After patch done back to home [your repository](../README.md#spotjfy)
+After patch done, back to home [your repository](../README.md#spotjfy)
 
 ---
 
