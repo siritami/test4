@@ -283,9 +283,9 @@ get_apkpure() {
         fi
         if [[ $4 == "Bundle" ]]; then
             green_log "[+] Merge splits apk to standalone apk"
-            java -jar $APKEditor m -i ./download/$2.xapk -o ./download/$2.apk > /dev/null 2>&1
+            java -jar $APKEditor m -i ./download/$2.xapk -o ./download/$2.apk
         elif [[ $4 == "Bundle_extract" ]]; then
-            unzip "./download/$base_apk" -d "./download/$(basename "$base_apk" .xapk)" > /dev/null 2>&1
+            unzip "./download/$base_apk" -d "./download/$(basename "$base_apk" .xapk)"
         fi
         return 0
 	fi
