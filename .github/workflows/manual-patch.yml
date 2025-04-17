@@ -327,7 +327,7 @@ jobs:
       - name: Patch apk
         id: patch-potjfy
         if: steps.check-gh-potjfy.outputs.internet_error == '0'
-        run: bash src/build/potjfy.sh
+        run: bash src/build/$potjfy.sh
       - name: Releasing APK files
         id: release-potjfy
         if: steps.check-gh-potjfy.outputs.internet_error == '0'
