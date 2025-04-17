@@ -275,13 +275,13 @@ get_apkpure() {
 		url="https://apkpure.com/$3/downloading/$version"
 	else
 		url="https://apkpure.com/$3/versions"
-		echo "Here: $url"
-        url="$(req "$url" - | grep -m 1 '<a class="ver_download_link"' | sed -n 's/.*href="\([^"]*\)".*/\1/p')"
-		echo "Here: $url"
+		echo "Here1: $url"
+        url="$(req "$url" - | grep -o 'href="[^"]*"' | head -1 | cut -d'"' -f2)"
+		echo "Here2: $url"
         url="${url/download/downloading}"
-		echo "Here: $url"
+		echo "Here3: $url"
         req "$url" "$base_apk"
-		echo "Here: $url"
+		echo "Here4: $url"
 	fi
 	url="$(req "$url" - | grep -oP '<a[^>]+id="download_link"[^>]+href="\Khttps://[^"]+')"
 	req "$url" "$base_apk"
