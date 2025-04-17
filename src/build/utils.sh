@@ -271,14 +271,12 @@ get_apkpure() {
 		local base_apk="$2.apk"
 	fi
 	if [[ -n "$version" ]]; then
-		green_log "[+] Downloading $2 version: $version $4"
 		url="https://apkpure.com/$3/downloading/$version"
 	else
 		url="https://apkpure.com/$3/downloading/"
-		echo "Here1: $url"
-		local get_version="$(req "$url" - | awk -F'Download APK | \\(' '/<h2>/{print $2}')"
-		echo "Here2: $get_version"
+		version="$(req "$url" - | awk -F'Download APK | \\(' '/<h2>/{print $2}')"
 	fi
+	green_log "[+] Downloading $2 version: $version $4"
 	url="$(req "$url" - | grep -oP '<a[^>]+id="download_link"[^>]+href="\Khttps://[^"]+')"
 	req "$url" "$base_apk"
 	if [[ -f "./download/$base_apk" ]]; then
