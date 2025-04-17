@@ -265,29 +265,37 @@ get_apkpure() {
 		fi
 	fi
 	export version="$version"
+	if [[ $4 == "Bundle" ]] || [[ $4 == "Bundle_extract" ]]; then
+		local base_apk="$2.xapk"
+	else
+		local base_apk="$2.apk"
+	fi
 	if [[ -n "$version" ]]; then
 		green_log "[+] Downloading $2 version: $version $4"
-        if [[ $4 == "Bundle" ]] || [[ $4 == "Bundle_extract" ]]; then
-            local base_apk="$2.xapk"
-        else
-            local base_apk="$2.apk"
-        fi
 		url="https://apkpure.com/$3/downloading/$version"
-		url="$(req "$url" - | grep -oP '<a[^>]+id="download_link"[^>]+href="\Khttps://[^"]+')"
-		req "$url" "$base_apk"
-        if [[ -f "./download/$base_apk" ]]; then
-            green_log "[+] Successfully downloaded $2"
-        else
-            red_log "[-] Failed to download $2"
-            exit 1
-        fi
-        if [[ $4 == "Bundle" ]]; then
-            green_log "[+] Merge splits apk to standalone apk"
-            java -jar $APKEditor m -i ./download/$2.xapk -o ./download/$2.apk
-        elif [[ $4 == "Bundle_extract" ]]; then
-            unzip "./download/$base_apk" -d "./download/$(basename "$base_apk" .xapk)"
-        fi
-        return 0
+	else
+		url="https://apkpure.com/$3/versions"
+		echo "Here: $url"
+        url="$(req "$url" - | grep -m 1 '<a class="ver_download_link"' | sed -n 's/.*href="\([^"]*\)".*/\1/p')"
+		echo "Here: $url"
+        url="${url/download/downloading}"
+		echo "Here: $url"
+        req "$url" "$base_apk"
+		echo "Here: $url"
+	fi
+	url="$(req "$url" - | grep -oP '<a[^>]+id="download_link"[^>]+href="\Khttps://[^"]+')"
+	req "$url" "$base_apk"
+	if [[ -f "./download/$base_apk" ]]; then
+		green_log "[+] Successfully downloaded $2"
+	else
+		red_log "[-] Failed to download $2"
+		exit 1
+	fi
+	if [[ $4 == "Bundle" ]]; then
+		green_log "[+] Merge splits apk to standalone apk"
+		java -jar $APKEditor m -i ./download/$2.xapk -o ./download/$2.apk > /dev/null 2>&1
+	elif [[ $4 == "Bundle_extract" ]]; then
+		unzip "./download/$base_apk" -d "./download/$(basename "$base_apk" .xapk)" > /dev/null 2>&1
 	fi
 }
 
