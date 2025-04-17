@@ -264,6 +264,20 @@ get_apkpure() {
 			fi
 		fi
 	fi
+	export version="$version"
+	if [[ -n "$version" ]]; then
+		green_log "[+] Downloading $2 version: $version $4"
+        if [[ $5 == "Bundle" ]] || [[ $5 == "Bundle_extract" ]]; then
+            local base_apk="$2.apkm"
+        else
+            local base_apk="$2.apk"
+        fi
+		url="https://apkpure.com/$3/downloading/$version"
+		echo "Here is: $url"
+		url="$(req "$url" - | grep -oP '<a[^>]+id="download_link"[^>]+href="\Khttps://[^"]+')"
+		req "$url" "$base_apk"
+		echo "Here is: $url"
+	fi
 }
 
 #################################################

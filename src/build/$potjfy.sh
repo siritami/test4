@@ -5,8 +5,10 @@ source src/build/utils.sh
 # Download requirements
 dl_gh "revanced-patches revanced-cli" "revanced" "latest"
 
-# Patch $potjfy:
-get_patches_key "$potjfy-revanced"
-get_apkure "com.spotify.music" "$potjfy" "spotify-music-and-podcasts-for-android/com.spotify.music" "Bundle_extract"
-split_editor "youtube" "youtube"
-patch "$potjfy" "revanced" "inotia"
+# Patch Spotjfy:
+get_patches_key "Spotjfy-revanced"
+local j="i"
+version="9.0.38.129"
+get_apkure "com.spot$jfy.music" "Spotjfy" "spot$jfy-music-and-podcasts-for-android/com.spot$jfy.music" "Bundle_extract"
+split_editor "spotjfy" "spotjfy"
+patch "spotjfy" "revanced"
