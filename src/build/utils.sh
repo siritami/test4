@@ -38,7 +38,6 @@ dl_gh() {
             local found=0 assets=0
             while IFS= read -r line; do
                 if [[ $line == *'"tag_name":'* ]]; then
-                    # for "latest" or "prerelease", mark found
                     if [ "$tag" = "latest" ] || [ "$tag" = "prerelease" ]; then
                         found=1
                     else
@@ -99,7 +98,6 @@ dl_gh() {
         fi
     done
 }
-
 
 #################################################
 
@@ -355,7 +353,7 @@ patch() {
 lspatch() {
 	green_log "[+] Patching $1:"
 	if [ -f "./download/$1.apk" ]; then
-		eval java -jar lspatch.jar
+		eval java -jar lspatch.jar --outputs ./release/$1-$2.apk *$2*.apk $1.apk
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
