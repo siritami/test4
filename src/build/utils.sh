@@ -354,6 +354,7 @@ lspatch() {
 	green_log "[+] Patching $1:"
 	if [ -f "./download/$1.apk" ]; then
 		eval java -jar lspatch.jar --outputs ./release/$1-$2.apk *$2*.apk $1.apk
+		echo "java -jar lspatch.jar --outputs ./release/$1-$2.apk *$2*.apk $1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
