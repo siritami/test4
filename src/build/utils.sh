@@ -363,7 +363,7 @@ lspatch() {
 		red_log "[-] Not found $1.apk"
 		exit 1
 	fi
-	ls ./release/"$1"-"$2".apk 2>/dev/null | head -n1 | xargs -r mv -- - "$1"-"$2".apk 
+	ls ./release/"$1"-"$2".apk | head -n1 | xargs -r mv -- - "$1"-"$2".apk > /dev/null 2>&1
 }
 
 #################################################
