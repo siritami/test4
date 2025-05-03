@@ -339,7 +339,7 @@ patch() {
 		if [ "$3" = inotia ]; then
 			unset CI GITHUB_ACTION GITHUB_ACTIONS GITHUB_ACTOR GITHUB_ENV GITHUB_EVENT_NAME GITHUB_EVENT_PATH GITHUB_HEAD_REF GITHUB_JOB GITHUB_REF GITHUB_REPOSITORY GITHUB_RUN_ID GITHUB_RUN_NUMBER GITHUB_SHA GITHUB_WORKFLOW GITHUB_WORKSPACE RUN_ID RUN_NUMBER
 		fi
-		eval java -jar *cli*.jar $p$b $m$opt --out=./release/$1-$2.apk$excludePatches$includePatches --keystore=./src/build/$ks.keystore $pu$force $a./download/$1.apk
+		eval java -jar *cli*.jar $p$b $m$opt --out=./release/$1-$2.apk$excludePatches$includePatches --keystore=./src/$ks.keystore $pu$force $a./download/$1.apk
   		unset version
 		unset lock_version
 		unset excludePatches
@@ -358,7 +358,7 @@ lspatch() {
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
-		java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --keystore ["./src/build/ks.keystore", null, "ReVanced Key", null] --output "./release/" "./download/$1.apk"
+		eval java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --keystore ["./src/ks.keystore", null, "ReVanced Key", null] --output "./release/" "./download/$1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
