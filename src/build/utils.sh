@@ -363,7 +363,7 @@ lspatch() {
 		red_log "[-] Not found $1.apk"
 		exit 1
 	fi
-	mv ./release/"$1"*.apk ./release/"$1"-"$2".apk
+	#mv ./release/"$1"*.apk ./release/"$1"-"$2".apk
 }
 
 #################################################
