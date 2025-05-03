@@ -358,6 +358,8 @@ lspatch() {
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
+		ls *"$2"*.apk
+		ls ./download
 		echo "eval java -jar lspatch.jar -m $patch_file --outputs ./release/$1-$2.apk ./download/$1.apk"
 		java -jar lspatch.jar -m $patch_file --outputs ./release/$1-$2.apk ./download/$1.apk
 	else 
