@@ -353,12 +353,13 @@ patch() {
 lspatch() {
 	green_log "[+] Patching $1:"
 	local patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
+	cp ./src/ks.keystore ./download/ks.keystore
 	if [ -z "$patch_file" ]; then
         red_log "[-] Missing patch APK"
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
-		eval java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --keystore ["./src/ks.keystore", null, "ReVanced Key", null] --output "./release/" "./download/$1.apk"
+		java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --keystore ["./download/ks.keystore", null, "ReVanced Key", null] --output "./release/" "./download/$1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
