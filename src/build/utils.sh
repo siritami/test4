@@ -358,12 +358,12 @@ lspatch() {
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
-		java -jar lspatch.jar -m "$patch_file" -l 2 --injectdex -o "./release/" "./download/$1.apk"
+		java -jar lspatch.jar -m "$patch_file" -l 2 --injectdex -k [null, null, ReVanced Key, null] -o "./release/" "./download/$1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
 	fi
-	local release_file=$(ls ./release/"$1"-"$2".apk 2>/dev/null | head -n1)
+	ls ./release/"$1"-"$2".apk 2>/dev/null | head -n1 | xargs -r mv -- - "$1"-"$2".apk 
 }
 
 #################################################
