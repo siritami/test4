@@ -11,7 +11,7 @@ on:
       org:
         description: 'Which "LSPatch" do you want to patch?'
         required: true
-        default: 'Insta Eclipse'
+        default: 'InstaEclipse'
         type: choice
         options:
           - 'InstaEclipse'
@@ -22,8 +22,8 @@ on:
         type: string
 jobs:
   patch_insta_eclipse:
-    name: Patch Insta Eclipse
-    if: ${{ github.event.inputs.org == 'Insta Eclipse' || inputs.org == 'Insta Eclipse' }}
+    name: Patch InstaEclipse
+    if: ${{ github.event.inputs.org == 'InstaEclipse' || inputs.org == 'InstaEclipse' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
