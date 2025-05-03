@@ -352,7 +352,7 @@ patch() {
 
 lspatch() {
 	green_log "[+] Patching $1:"
-	patch_file=$(ls ./download/*"$2"*.apk 2>/dev/null | head -n1)
+	patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
 	if [ -z "$patch_file" ]; then
         red_log "[-] No patch APK matching '*$2*.apk' in ./download/"
         exit 1
