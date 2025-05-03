@@ -354,10 +354,11 @@ lspatch() {
 	green_log "[+] Patching $1:"
 	patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
 	if [ -z "$patch_file" ]; then
-        red_log "[-] No patch APK matching '*$2*.apk' in ./download/"
+        red_log "[-] No patch APK matching '*$2*.apk'"
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
+		echo "eval java -jar lspatch.jar --outputs ./release/$1-$2.apk $1.apk $patch_file.apk"
 		eval java -jar lspatch.jar --outputs ./release/$1-$2.apk $1.apk $patch_file.apk
 	else 
 		red_log "[-] Not found $1.apk"
