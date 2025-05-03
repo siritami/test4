@@ -352,20 +352,18 @@ patch() {
 
 lspatch() {
 	green_log "[+] Patching $1:"
-	patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
+	local patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
 	if [ -z "$patch_file" ]; then
         red_log "[-] Missing patch APK"
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
-		ls *"$2"*.apk
-		ls ./download
-		echo "java -jar lspatch.jar -m "$patch_file" --outputs "./release/$1-$2.apk" "./download/$1.apk""
-		java -jar lspatch.jar -m "$patch_file" -o "./release/$1-$2.apk" "./download/$1.apk"
+		java -jar lspatch.jar -m "$patch_file" -o "./release/" "./download/$1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
 	fi
+	local release_file=$(ls ./release/"$1"-"$2".apk 2>/dev/null | head -n1)
 }
 
 #################################################
