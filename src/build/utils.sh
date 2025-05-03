@@ -273,9 +273,9 @@ get_apkpure() {
 		if [[ $(ls revanced-cli-*.jar) =~ revanced-cli-([0-9]+) ]]; then
 			num=${BASH_REMATCH[1]}
 			if [ $num -ge 5 ]; then
-				version=$(java -jar *cli*.jar list-patches --with-packages --with-versions *.rvp | awk -v pkg="$1" 'BEGIN { found = 0 } /^Index:/ { found = 0 } /Package name: / { if ($3 == pkg) { found = 1 } } /Compatible versions:/ { if (found) { getline; latest_version = $1; while (getline && $1 ~ /^[0-9]+\./) { latest_version = $1 } print latest_version; exit } }')
+				version=$(java -jar *cli*.jar list-patches --with-packages --with-versions *.rvp  > /dev/null 2>&1 | awk -v pkg="$1" 'BEGIN { found = 0 } /^Index:/ { found = 0 } /Package name: / { if ($3 == pkg) { found = 1 } } /Compatible versions:/ { if (found) { getline; latest_version = $1; while (getline && $1 ~ /^[0-9]+\./) { latest_version = $1 } print latest_version; exit } }')
 			else
-				version=$(jq -r '[.. | objects | select(.name == "'$1'" and .versions != null) | .versions[]] | reverse | .[0] // ""' *.json | uniq)
+				version=$(jq -r '[.. | objects | select(.name == "'$1'" and .versions != null) > /dev/null 2>&1 | .versions[]] | reverse | .[0] // ""' *.json | uniq)
 			fi
 		fi
 	fi
@@ -353,18 +353,17 @@ patch() {
 lspatch() {
 	green_log "[+] Patching $1:"
 	local patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
-	cp -- ./src/ks.keystore ./download/ks.keystore
 	if [ -z "$patch_file" ]; then
         red_log "[-] Missing patch APK"
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
-		java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --keystore ["./download/ks.keystore", null, "ReVanced Key", null] --output "./release/" "./download/$1.apk"
+		java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --keystore ["./src/ks.keystore", null, "ReVanced Key", null] --output "./release/" "./download/$1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
 	fi
-	ls ./release/"$1"-"$2".apk | head -n1 | xargs -r mv -- - "$1"-"$2".apk > /dev/null 2>&1
+	ls ./release/"$1"-"$2".apk | head -n1 | xargs -r mv -- - "$1"-"$2".apk
 }
 
 #################################################
