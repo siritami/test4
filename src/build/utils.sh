@@ -358,7 +358,7 @@ lspatch() {
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
-		java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --keystore ./src/keystore, 123456, "revanced key", 123456 --output "./release/" "./download/$1.apk"
+		java -jar lspatch.jar --embed "$patch_file" --sigbypasslv 2 --injectdex --output "./release/" "./download/$1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
