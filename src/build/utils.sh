@@ -358,7 +358,7 @@ lspatch() {
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
-		java -jar lspatch.jar -m "$patch_file" -o "./release/" "./download/$1.apk"
+		java -jar lspatch.jar -m "$patch_file" --injectdex -o "./release/" "./download/$1.apk"
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
