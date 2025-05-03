@@ -353,7 +353,7 @@ patch() {
 lspatch() {
 	green_log "[+] Patching $1:"
 	local patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
-	cp ./src/ks.keystore ./download/ks.keystore
+	cp -- ./src/ks.keystore ./download/ks.keystore
 	if [ -z "$patch_file" ]; then
         red_log "[-] Missing patch APK"
         exit 1
