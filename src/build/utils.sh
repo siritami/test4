@@ -354,7 +354,7 @@ lspatch() {
 	green_log "[+] Patching $1:"
 	patch_file=$(ls *"$2"*.apk 2>/dev/null | head -n1)
 	if [ -z "$patch_file" ]; then
-        red_log "[-] Missing patch APK '*$2*.apk'"
+        red_log "[-] Missing patch APK"
         exit 1
     fi
 	if [ -f "./download/$1.apk" ]; then
