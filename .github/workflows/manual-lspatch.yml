@@ -1,0 +1,43 @@
+name: Manual LSPatch
+permissions: write-all
+env:
+  repository: ${{ github.repository }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  org_input: ${{ inputs.org }}
+  org_event_input: ${{ github.event.inputs.org }}
+on:
+  workflow_dispatch:
+    inputs:
+      org:
+        description: 'Which "LSPatch" do you want to patch?'
+        required: true
+        default: 'Insta Eclipse'
+        type: choice
+        options:
+          - 'InstaEclipse'
+  workflow_call:
+    inputs:
+      org:
+        required: true
+        type: string
+jobs:
+  patch_insta_eclipse:
+    name: Patch Insta Eclipse
+    if: ${{ github.event.inputs.org == 'Insta Eclipse' || inputs.org == 'Insta Eclipse' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Preparing to patch
+        uses: ./.github/actions/preparing
+      - name: Check github connection
+        id: check-gh-insta-eclipse
+        run: bash src/etc/connection.sh
+      - name: Patch apk
+        id: patch-insta-eclipse
+        if: steps.check-gh-insta-eclipse.outputs.internet_error == '0'
+        run: bash src/build/InstaEclipse.sh
+      - name: Releasing APK files
+        id: release-insta-eclipse
+        if: steps.check-gh-insta-eclipse.outputs.internet_error == '0'
+        uses: ./.github/actions/release

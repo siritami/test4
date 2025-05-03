@@ -24,65 +24,82 @@ red_log() {
 
 # Download Github assets requirement:
 dl_gh() {
-	if [ $3 == "prerelease" ]; then
-		local repo=$1
-		for repo in $1 ; do
-			local owner=$2 tag=$3 found=0 assets=0
-			releases=$(wget -qO- "https://api.github.com/repos/$owner/$repo/releases")
-			while read -r line; do
-				if [[ $line == *"\"tag_name\":"* ]]; then
-					tag_name=$(echo $line | cut -d '"' -f 4)
-					if [ "$tag" == "latest" ] || [ "$tag" == "prerelease" ]; then
-						found=1
-					else
-						found=0
-					fi
-				fi
-				if [[ $line == *"\"prerelease\":"* ]]; then
-					prerelease=$(echo $line | cut -d ' ' -f 2 | tr -d ',')
-					if [ "$tag" == "prerelease" ] && [ "$prerelease" == "true" ] ; then
-						found=1
-      					elif [ "$tag" == "prerelease" ] && [ "$prerelease" == "false" ]; then
-	   					found=1
-					fi
-				fi
-				if [[ $line == *"\"assets\":"* ]]; then
-					if [ $found -eq 1 ]; then
-						assets=1
-					fi
-				fi
-				if [[ $line == *"\"browser_download_url\":"* ]]; then
-					if [ $assets -eq 1 ]; then
-						url=$(echo $line | cut -d '"' -f 4)
-							if [[ $url != *.asc ]]; then
-							name=$(basename "$url")
-							wget -q -O "$name" "$url"
-							green_log "[+] Downloading $name from $owner"
-						fi
-					fi
-				fi
-				if [[ $line == *"],"* ]]; then
-					if [ $assets -eq 1 ]; then
-						assets=0
-						break
-					fi
-				fi
-			done <<< "$releases"
-		done
-	else
-		for repo in $1 ; do
-			tags=$( [ "$3" == "latest" ] && echo "latest" || echo "tags/$3" )
-			wget -qO- "https://api.github.com/repos/$2/$repo/releases/$tags" \
-			| jq -r '.assets[] | "\(.browser_download_url) \(.name)"' \
-			| while read -r url names; do
-   				if [[ $url != *.asc ]]; then
-					green_log "[+] Downloading $names from $2"
-					wget -q -O "$names" $url
-     				fi
-			done
-		done
-	fi
+    local repos owner tag exclude exclude_list
+    repos="$1"
+    owner="$2"
+    tag="$3"
+    exclude="$4"
+    IFS=' ' read -r -a exclude_list <<< "$exclude"
+    exclude_list+=(".asc")
+    for repo in $repos; do
+        if [ "$tag" = "prerelease" ]; then
+            local releases
+            releases=$(wget -qO- "https://api.github.com/repos/$owner/$repo/releases")
+            local found=0 assets=0
+            while IFS= read -r line; do
+                if [[ $line == *'"tag_name":'* ]]; then
+                    # for "latest" or "prerelease", mark found
+                    if [ "$tag" = "latest" ] || [ "$tag" = "prerelease" ]; then
+                        found=1
+                    else
+                        found=0
+                    fi
+                fi
+                if [[ $line == *'"prerelease":'* ]]; then
+                    if [ "$tag" = "prerelease" ]; then
+                        found=1
+                    fi
+                fi
+                if [[ $line == *'"assets":'* ]]; then
+                    assets=$found
+                fi
+                if [[ $line == *'"browser_download_url":'* ]] && [ $assets -eq 1 ]; then
+                    url=$(echo "$line" | cut -d '"' -f 4)
+                    local skip=false
+                    for pat in "${exclude_list[@]}"; do
+                        if [[ $url == *"$pat" ]]; then
+                            skip=true
+                            break
+                        fi
+                    done
+                    if ! $skip; then
+                        name=$(basename "$url")
+                        wget -q -O "$name" "$url"
+                        green_log "[+] Downloading $name from $owner/$repo"
+                    fi
+                fi
+
+                if [[ $line == *"],"* ]] && [ $assets -eq 1 ]; then
+                    assets=0
+                    break
+                fi
+            done <<< "$releases"
+        else
+            local ref
+            if [ "$tag" = "latest" ]; then
+                ref="latest"
+            else
+                ref="tags/$tag"
+            fi
+            wget -qO- "https://api.github.com/repos/$owner/$repo/releases/$ref" \
+            | jq -r '.assets[] | "\(.browser_download_url) \(.name)"' \
+            | while read -r url name; do
+                local skip=false
+                for pat in "${exclude_list[@]}"; do
+                    if [[ $url == *"$pat" ]]; then
+                        skip=true
+                        break
+                    fi
+                done
+                if ! $skip; then
+                    green_log "[+] Downloading $name from $owner/$repo"
+                    wget -q -O "$name" "$url"
+                fi
+            done
+        fi
+    done
 }
+
 
 #################################################
 
@@ -329,6 +346,16 @@ patch() {
 		unset lock_version
 		unset excludePatches
 		unset includePatches
+	else 
+		red_log "[-] Not found $1.apk"
+		exit 1
+	fi
+}
+
+lspatch() {
+	green_log "[+] Patching $1:"
+	if [ -f "./download/$1.apk" ]; then
+		eval java -jar lspatch.jar
 	else 
 		red_log "[-] Not found $1.apk"
 		exit 1
